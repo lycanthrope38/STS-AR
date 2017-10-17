@@ -1,0 +1,27 @@
+{
+  "data": {
+    "list_photo_frames": [
+      {
+        "name": "Project a",
+        "folder": "a",
+        "cover": "cover_a.jpg",
+        "description": "project a",
+        "size": 3
+      },
+      {
+        "name": "Project b",
+        "folder": "b",
+        "cover": "cover_a.jpg",
+        "description": "project b",
+        "size": 3
+      },
+      {
+        "name": "Project c",
+        "folder": "c",
+        "cover": "cover_a.jpg",
+        "description": "project c",
+        "size": 3
+      }
+    ]
+  }
+}
