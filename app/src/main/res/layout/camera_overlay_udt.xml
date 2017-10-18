@@ -3,6 +3,12 @@
     android:id="@+id/camera_overlay_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:gravity="center"/>
 
     <RelativeLayout
         android:id="@+id/loading_layout"

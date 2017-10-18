@@ -7,10 +7,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.company.sts_ar.R;
+import com.company.sts_ar.util.AppUtils;
 import com.company.sts_ar.util.GridDividerDecoration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -25,11 +27,12 @@ public class MenuActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private MenuAdapter mAdapter;
-    private List<Project> mProjects;
+    private List<Project> mProjects =new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu);
 
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -38,7 +41,7 @@ public class MenuActivity extends AppCompatActivity {
         mAdapter = new MenuAdapter(this,mProjects);
         mRecyclerView.setAdapter(mAdapter);
 
-        Observable.fromCallable(() -> new Gson().fromJson("file:///android_asset/project.json", Data.class).projects).subscribeOn(Schedulers.newThread())
+        Observable.fromCallable(() -> new GsonBuilder().create().fromJson(AppUtils.loadJSONFromAsset(this), Data.class).projects).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(projects -> mAdapter.addItems(projects));
     }

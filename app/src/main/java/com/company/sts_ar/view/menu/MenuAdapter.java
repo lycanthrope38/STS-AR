@@ -2,6 +2,8 @@ package com.company.sts_ar.view.menu;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,9 @@ import android.widget.TextView;
 import com.company.sts_ar.R;
 import com.company.sts_ar.util.SquareImage;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +50,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         holder.bindData(mProjects.get(position));
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(mContext, DetailActivity.class);
-            intent.putExtra(DetailActivity.EXTRA_PROJECT, mProjects.get(position).folder);
+            intent.putExtra(DetailActivity.EXTRA_PROJECT,mProjects.get(position));
             mContext.startActivity(intent);
         });
     }
@@ -68,7 +73,18 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
         public void bindData(Project project) {
             tvName.setText(project.name);
-            ivImage.setImageResource(project.cover);
+            // load image
+            try {
+                // get input stream
+                InputStream ims = mContext.getAssets().open(project.folder + File.separator + project.cover);
+                // load image as Drawable
+                Drawable d = Drawable.createFromStream(ims, null);
+                // set image to ImageView
+                ivImage.setImageDrawable(d);
+            }
+            catch(IOException ex) {
+                return;
+            }
         }
     }
 

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.company.sts_ar.BaseActivity;
 import com.company.sts_ar.R;
@@ -24,6 +25,8 @@ import com.company.sts_ar.session.SampleApplicationControl;
 import com.company.sts_ar.session.SampleApplicationException;
 import com.company.sts_ar.session.SampleApplicationSession;
 import com.company.sts_ar.util.LoadingDialogHandler;
+import com.company.sts_ar.view.menu.DetailActivity;
+import com.company.sts_ar.view.menu.Project;
 import com.vuforia.CameraDevice;
 import com.vuforia.DataSet;
 import com.vuforia.ImageTargetBuilder;
@@ -34,6 +37,7 @@ import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -84,12 +88,13 @@ public class UserDefinedTargets extends BaseActivity implements
 
     boolean mIsDroidDevice = false;
 
-    List<String> objects = new ArrayList<>(Arrays.asList( "slide1.obj"));
+    List<String> objects = new ArrayList<>();
 
     private PublishSubject<Integer> mCurrentPageObserver = PublishSubject.create();
     private int mCurrentPage = 0;
 
     Timber.Tree tree = Timber.tag("user-defined");
+    private Project project;
 
 
     // Called when the activity first starts or needs to be recreated after
@@ -106,6 +111,12 @@ public class UserDefinedTargets extends BaseActivity implements
 
         mGestureDetector = new GestureDetector(this, new GestureListener());
 
+        project = ((Project) getIntent().getSerializableExtra(DetailActivity.EXTRA_PROJECT));
+
+        for (int i = 0; i < project.size; i++) {
+            objects.add("slide" + i + ".obj");
+        }
+
         mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
                 "droid");
 
@@ -114,7 +125,7 @@ public class UserDefinedTargets extends BaseActivity implements
         scene = new SceneLoader(this);
         Observable.fromIterable(objects)
                 .flatMap(nameAsset -> {
-                    scene.init("models", nameAsset);
+                    scene.init(project.folder, nameAsset);
                     return Observable.just(true);
                 })
                 .subscribe();
@@ -315,6 +326,8 @@ public class UserDefinedTargets extends BaseActivity implements
 
         // Gets a reference to the Camera button
         mCameraButton = mUILayout.findViewById(R.id.camera_button);
+
+        ((TextView) mUILayout.findViewById(R.id.tv_name)).setText(project.name);
 
         // Gets a reference to the loading dialog container
         loadingDialogHandler.mLoadingDialogContainer = mUILayout

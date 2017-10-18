@@ -23,7 +23,7 @@ public class DetailActivity extends AppCompatActivity {
 
         findViewById(R.id.fab).setOnClickListener(view -> {
             Intent intent = new Intent(this, UserDefinedTargets.class);
-            intent.putExtra(EXTRA_PROJECT, getIntent().getStringExtra(EXTRA_PROJECT));
+            intent.putExtra(EXTRA_PROJECT, getIntent().getSerializableExtra(EXTRA_PROJECT));
             startActivity(intent);
         });
 
