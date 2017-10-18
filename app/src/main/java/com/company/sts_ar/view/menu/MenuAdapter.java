@@ -3,7 +3,6 @@ package com.company.sts_ar.view.menu;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import com.company.sts_ar.R;
 import com.company.sts_ar.util.SquareImage;
+import com.company.sts_ar.vo.Project;
 
 import java.io.File;
 import java.io.IOException;

@@ -18,7 +18,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.company.sts_ar.BaseActivity;
 import com.company.sts_ar.R;
 import com.company.sts_ar.loader.SceneLoader;
 import com.company.sts_ar.session.SampleApplicationControl;
@@ -26,7 +25,7 @@ import com.company.sts_ar.session.SampleApplicationException;
 import com.company.sts_ar.session.SampleApplicationSession;
 import com.company.sts_ar.util.LoadingDialogHandler;
 import com.company.sts_ar.view.menu.DetailActivity;
-import com.company.sts_ar.view.menu.Project;
+import com.company.sts_ar.vo.Project;
 import com.vuforia.CameraDevice;
 import com.vuforia.DataSet;
 import com.vuforia.ImageTargetBuilder;
@@ -37,9 +36,7 @@ import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observable;

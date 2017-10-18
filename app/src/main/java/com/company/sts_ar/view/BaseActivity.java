@@ -1,4 +1,4 @@
-package com.company.sts_ar;
+package com.company.sts_ar.view;
 
 import android.app.Activity;
 

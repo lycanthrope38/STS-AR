@@ -3,7 +3,6 @@ package com.company.sts_ar.view.menu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import com.company.sts_ar.R;
 import com.company.sts_ar.util.AppUtils;
 import com.company.sts_ar.util.GridDividerDecoration;
-import com.google.gson.Gson;
+import com.company.sts_ar.vo.Data;
+import com.company.sts_ar.vo.Project;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
@@ -49,24 +49,8 @@ public class MenuActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(projects -> mAdapter.addItems(projects));
 
-        findViewById(R.id.fab)
-                .setOnClickListener(view -> startActivityForResult(new Intent(MenuActivity.this, BarcodeActivity.class), ACTION_SCAN));
+
+
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == ACTION_SCAN) {
-            String folderName = data.getStringExtra(BarcodeActivity.EXTRA_FOLDER);
-            for (int i = 0; i < mProjects.size(); i++) {
-                Project project = mProjects.get(i);
-                if (project.folder.trim().equalsIgnoreCase(folderName.trim())) {
-                    Intent intent = new Intent(this, DetailActivity.class);
-                    intent.putExtra(DetailActivity.EXTRA_PROJECT, project);
-                    startActivity(intent);
-                    break;
-                }
-            }
-        }
-    }
 }

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 
 import com.company.sts_ar.R;
+import com.company.sts_ar.config.Extra;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.List;
@@ -18,8 +19,6 @@ import info.androidhive.barcode.BarcodeReader;
  */
 
 public class BarcodeActivity extends AppCompatActivity implements BarcodeReader.BarcodeReaderListener {
-
-    public static final String EXTRA_FOLDER = "extra_folder";
 
     private BarcodeReader barcodeReader;
 
@@ -39,7 +38,7 @@ public class BarcodeActivity extends AppCompatActivity implements BarcodeReader.
     public void onScanned(Barcode barcode) {
         barcodeReader.playBeep();
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_FOLDER, barcode.displayValue);
+        intent.putExtra(Extra.EXTRA_URL, barcode.displayValue);
         setResult(RESULT_OK, intent);
         finish();
     }

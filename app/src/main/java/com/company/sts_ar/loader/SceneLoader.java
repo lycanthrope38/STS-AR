@@ -4,7 +4,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.company.sts_ar.BaseActivity;
+import com.company.sts_ar.view.BaseActivity;
 
 import java.io.File;
 import java.net.MalformedURLException;

@@ -1,4 +1,4 @@
-package com.company.sts_ar.view.menu;
+package com.company.sts_ar.vo;
 
 import java.io.Serializable;
 
