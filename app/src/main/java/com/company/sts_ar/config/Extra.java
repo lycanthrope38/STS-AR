@@ -6,4 +6,5 @@ package com.company.sts_ar.config;
 
 public @interface Extra {
     String EXTRA_URL = "extra_url";
+    String EXTRA_PATH_STRUCTURE = "extra_path_structure";
 }

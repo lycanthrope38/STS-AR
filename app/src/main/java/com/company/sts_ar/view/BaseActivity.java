@@ -22,14 +22,6 @@ public class BaseActivity extends Activity {
         return getParamFilename() != null ? new File(getParamFilename()) : null;
     }
 
-    public String getParamAssetDir() {
-        return paramAssetDir;
-    }
-
-    public String getParamAssetFilename() {
-        return paramAssetFilename;
-    }
-
     public String getParamFilename() {
         return paramFilename;
     }

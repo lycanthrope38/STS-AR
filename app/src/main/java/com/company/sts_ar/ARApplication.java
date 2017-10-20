@@ -3,9 +3,16 @@ package com.company.sts_ar;
 import android.app.Application;
 import android.os.Environment;
 
+import com.bumptech.glide.Glide;
 import com.company.sts_ar.config.Config;
+import com.company.sts_ar.data.SharedVariables;
+import com.company.sts_ar.di.ApplicationComponent;
+import com.company.sts_ar.di.ApplicationModule;
+import com.company.sts_ar.di.DaggerApplicationComponent;
 
 import java.io.File;
+
+import javax.inject.Inject;
 
 import timber.log.Timber;
 
@@ -14,11 +21,16 @@ import timber.log.Timber;
  */
 
 public class ARApplication extends Application {
+
+
+    private ApplicationComponent mAppComponent;
+    private static ARApplication sInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
-
-        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + Config.DIRECTORY);
+        sInstance = this;
+        File directory = new File(Config.DIRECTORY_PATH);
 
         if (!directory.exists()) {
             directory.mkdirs();
@@ -27,5 +39,27 @@ public class ARApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+
+        mAppComponent = DaggerApplicationComponent
+                .builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+
     }
+
+    public ApplicationComponent getAppComponent() {
+        return mAppComponent;
+    }
+
+    public static synchronized ARApplication getInstance() {
+        return sInstance;
+    }
+
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Glide.get(this).clearMemory();
+    }
+
 }

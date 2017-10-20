@@ -7,6 +7,10 @@
     android:fitsSystemWindows="true">
 
     <TextView
+        android:id="@+id/tv_description"
+        android:textSize="20sp"
+        android:padding="10dp"
+        tools:text="AAA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.company.sts_ar.R;
+import com.company.sts_ar.config.Config;
 import com.company.sts_ar.loader.SceneLoader;
 import com.company.sts_ar.session.SampleApplicationControl;
 import com.company.sts_ar.session.SampleApplicationException;
@@ -36,6 +37,7 @@ import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +113,7 @@ public class UserDefinedTargets extends BaseActivity implements
         project = ((Project) getIntent().getSerializableExtra(DetailActivity.EXTRA_PROJECT));
 
         for (int i = 0; i < project.size; i++) {
-            objects.add("slide" + i + ".obj");
+            objects.add(project.folder + i + ".obj");
         }
 
         mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
@@ -121,8 +123,10 @@ public class UserDefinedTargets extends BaseActivity implements
 
         scene = new SceneLoader(this);
         Observable.fromIterable(objects)
+
                 .flatMap(nameAsset -> {
-                    scene.init(project.folder, nameAsset);
+                    paramFilename = Config.DIRECTORY_PATH + File.separator + project.folder + File.separator + nameAsset;
+                    scene.init(Config.DIRECTORY_PATH + File.separator + project.folder, nameAsset);
                     return Observable.just(true);
                 })
                 .subscribe();

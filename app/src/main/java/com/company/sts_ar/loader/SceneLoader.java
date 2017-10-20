@@ -57,7 +57,12 @@ public class SceneLoader {
             // Create asset url
             final URL url;
             try {
-                url = new URL("file:///android_asset/" + assetDir + File.separator + assetName);
+                if (parent.getParamFile() != null) {
+                    url = parent.getParamFile().toURI().toURL();
+                }
+                else {
+                    url = new URL("file:///android_asset/" + assetDir + File.separator + assetName);
+                }
             } catch (MalformedURLException e) {
                 Log.e("SceneLoader", e.getMessage(), e);
                 throw new RuntimeException(e);
