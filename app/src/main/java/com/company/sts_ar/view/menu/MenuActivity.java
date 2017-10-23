@@ -1,6 +1,5 @@
 package com.company.sts_ar.view.menu;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +12,8 @@ import com.company.sts_ar.R;
 import com.company.sts_ar.config.Config;
 import com.company.sts_ar.config.Extra;
 import com.company.sts_ar.data.SharedVariables;
-import com.company.sts_ar.di.ApplicationModule;
-import com.company.sts_ar.util.AppUtils;
 import com.company.sts_ar.util.FileUtils;
-import com.company.sts_ar.util.GridDividerDecoration;
+import com.company.sts_ar.util.view.GridDividerDecoration;
 import com.company.sts_ar.vo.Data;
 import com.company.sts_ar.vo.Project;
 import com.google.gson.GsonBuilder;

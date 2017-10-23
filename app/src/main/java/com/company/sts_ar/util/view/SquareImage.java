@@ -1,4 +1,4 @@
-package com.company.sts_ar.util;
+package com.company.sts_ar.util.view;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
@@ -9,6 +9,7 @@ import android.util.AttributeSet;
  */
 
 public class SquareImage extends AppCompatImageView {
+
     public SquareImage(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

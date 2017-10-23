@@ -28,10 +28,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.UserDefinedTargets"/>
-        <activity android:name=".view.menu.DetailActivity"/>
-        <activity android:name=".view.menu.BarcodeActivity"/>
-        <activity android:name=".view.menu.MenuActivity"/>
+        <activity android:name=".view.ar.UserDefinedTargets"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.menu.DetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.menu.BarcodeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.menu.MenuActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

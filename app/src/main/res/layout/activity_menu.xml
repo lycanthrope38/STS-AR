@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_center_focus_weak_black_24dp" />
+        android:src="@drawable/ic_chevron_right_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

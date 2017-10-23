@@ -1,4 +1,4 @@
-package com.company.sts_ar.util;
+package com.company.sts_ar.util.view;
 
 import android.app.Activity;
 import android.os.Handler;

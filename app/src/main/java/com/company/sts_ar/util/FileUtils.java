@@ -59,7 +59,6 @@ public class FileUtils {
     }
 
     public static String readFile(String path) {
-        //Read text from file
         StringBuilder text = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(path)));

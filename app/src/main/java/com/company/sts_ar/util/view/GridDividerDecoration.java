@@ -1,10 +1,12 @@
-package com.company.sts_ar.util;
+package com.company.sts_ar.util.view;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.company.sts_ar.util.ResourceUtils;
 
 public class GridDividerDecoration extends RecyclerView.ItemDecoration {
 

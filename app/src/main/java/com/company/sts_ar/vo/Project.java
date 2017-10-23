@@ -18,9 +18,6 @@ public class Project implements Serializable {
         public String obj;
         public String mtl;
 
-        public Component() {
-        }
-
         public Component(String image, String obj, String mtl) {
             this.image = image;
             this.obj = obj;

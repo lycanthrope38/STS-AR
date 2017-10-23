@@ -1,4 +1,4 @@
-package com.company.sts_ar.view;
+package com.company.sts_ar.view.ar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,11 +20,13 @@ import android.widget.TextView;
 
 import com.company.sts_ar.R;
 import com.company.sts_ar.config.Config;
+import com.company.sts_ar.config.Extra;
 import com.company.sts_ar.loader.SceneLoader;
 import com.company.sts_ar.session.SampleApplicationControl;
 import com.company.sts_ar.session.SampleApplicationException;
 import com.company.sts_ar.session.SampleApplicationSession;
-import com.company.sts_ar.util.LoadingDialogHandler;
+import com.company.sts_ar.util.view.LoadingDialogHandler;
+import com.company.sts_ar.view.BaseActivity;
 import com.company.sts_ar.view.menu.DetailActivity;
 import com.company.sts_ar.vo.Project;
 import com.vuforia.CameraDevice;
@@ -110,7 +112,7 @@ public class UserDefinedTargets extends BaseActivity implements
 
         mGestureDetector = new GestureDetector(this, new GestureListener());
 
-        project = ((Project) getIntent().getSerializableExtra(DetailActivity.EXTRA_PROJECT));
+        project = ((Project) getIntent().getSerializableExtra(Extra.EXTRA_PROJECT));
 
         for (int i = 0; i < project.size; i++) {
             objects.add(project.folder + i + ".obj");
@@ -123,7 +125,6 @@ public class UserDefinedTargets extends BaseActivity implements
 
         scene = new SceneLoader(this);
         Observable.fromIterable(objects)
-
                 .flatMap(nameAsset -> {
                     paramFilename = Config.DIRECTORY_PATH + File.separator + project.folder + File.separator + nameAsset;
                     scene.init(Config.DIRECTORY_PATH + File.separator + project.folder, nameAsset);
@@ -241,7 +242,6 @@ public class UserDefinedTargets extends BaseActivity implements
         if (mUILayout != null) {
             mUILayout.removeAllViews();
             ((ViewGroup) mUILayout.getParent()).removeView(mUILayout);
-
         }
 
         addOverlayView(false);

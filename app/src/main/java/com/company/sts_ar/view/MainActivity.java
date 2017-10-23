@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.company.sts_ar.ARApplication;
 import com.company.sts_ar.R;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ARApplication.getInstance().getAppComponent().inject(this);
+
         mPdDownload  = new ProgressDialog(this);
         mPdDownload.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mPdDownload.setMessage("Downloading. Please wait...");
@@ -67,8 +69,12 @@ public class MainActivity extends AppCompatActivity {
     private void downloadProjectStructure(String url) {
         mPdDownload.show();
         mSharedVariables.putBaseUrl(url.substring(0,url.lastIndexOf("/")));
+        if (!url.contains(Config.PROJECT_JSON)){
+            Toast.makeText(this, "URL is not valid", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Flowable.fromCallable(() -> {
-            String outputPath = Config.DIRECTORY_PATH + File.separator + url.substring(url.lastIndexOf("/") + 1);
+            String outputPath = Config.DIRECTORY_PATH + File.separator + url.substring(url.lastIndexOf("/") + 1 );
             FileUtils.download(url, new File(outputPath));
             return outputPath;
         }).subscribeOn(Schedulers.newThread())

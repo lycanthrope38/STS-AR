@@ -10,9 +10,10 @@ import android.widget.TextView;
 import com.company.sts_ar.ARApplication;
 import com.company.sts_ar.R;
 import com.company.sts_ar.config.Config;
+import com.company.sts_ar.config.Extra;
 import com.company.sts_ar.data.SharedVariables;
 import com.company.sts_ar.util.FileUtils;
-import com.company.sts_ar.view.UserDefinedTargets;
+import com.company.sts_ar.view.ar.UserDefinedTargets;
 import com.company.sts_ar.vo.Project;
 
 import java.io.File;
@@ -31,12 +32,12 @@ import timber.log.Timber;
  */
 
 public class DetailActivity extends AppCompatActivity {
+
     @Inject
     SharedVariables mSharedVariables;
 
     private static final String SEPARATOR = File.separator;
 
-    public static final String EXTRA_PROJECT = "extra_project";
     private List<Project.Component> mComponents = new ArrayList<>();
 
     private Project mProject;
@@ -51,7 +52,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ARApplication.getInstance().getAppComponent().inject(this);
         mBaseUrl = mSharedVariables.getBaseUrl();
-        mProject = (Project) getIntent().getSerializableExtra(EXTRA_PROJECT);
+        mProject = (Project) getIntent().getSerializableExtra(Extra.EXTRA_PROJECT);
+
         mFolder = new File(Config.DIRECTORY_PATH + SEPARATOR + mProject.folder);
         if (!mFolder.exists()) {
             mFolder.mkdirs();
@@ -73,7 +75,6 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         ((TextView) findViewById(R.id.tv_description)).setText(mProject.description);
-
 
     }
 
@@ -108,7 +109,7 @@ public class DetailActivity extends AppCompatActivity {
                             mPdDownload.dismiss();
                             Timber.tag("path--onComplete");
                             Intent intent = new Intent(this, UserDefinedTargets.class);
-                            intent.putExtra(EXTRA_PROJECT, mProject);
+                            intent.putExtra(Extra.EXTRA_PROJECT, mProject);
                             startActivity(intent);
                         });
     }

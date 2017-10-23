@@ -1,4 +1,4 @@
-package com.company.sts_ar.view;
+package com.company.sts_ar.view.ar;
 
 import android.content.res.Configuration;
 import android.opengl.GLES20;
