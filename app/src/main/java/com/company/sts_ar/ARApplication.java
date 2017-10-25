@@ -1,18 +1,14 @@
 package com.company.sts_ar;
 
 import android.app.Application;
-import android.os.Environment;
 
 import com.bumptech.glide.Glide;
 import com.company.sts_ar.config.Config;
-import com.company.sts_ar.data.SharedVariables;
 import com.company.sts_ar.di.ApplicationComponent;
 import com.company.sts_ar.di.ApplicationModule;
 import com.company.sts_ar.di.DaggerApplicationComponent;
 
 import java.io.File;
-
-import javax.inject.Inject;
 
 import timber.log.Timber;
 

@@ -2,7 +2,6 @@ package com.company.sts_ar.view;
 
 import android.app.Activity;
 
-
 import com.company.sts_ar.loader.SceneLoader;
 
 import java.io.File;
@@ -13,8 +12,6 @@ import java.io.File;
 
 public class BaseActivity extends Activity {
 
-    public String paramAssetDir;
-    public String paramAssetFilename;
     public String paramFilename;
     public SceneLoader scene;
 

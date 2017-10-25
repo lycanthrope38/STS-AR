@@ -59,8 +59,7 @@ public class SceneLoader {
             try {
                 if (parent.getParamFile() != null) {
                     url = parent.getParamFile().toURI().toURL();
-                }
-                else {
+                } else {
                     url = new URL("file:///android_asset/" + assetDir + File.separator + assetName);
                 }
             } catch (MalformedURLException e) {
@@ -108,21 +107,11 @@ public class SceneLoader {
     protected synchronized void addObject(Object3DData obj) {
         List<Object3DData> newList = new ArrayList<Object3DData>(objects);
         newList.add(obj);
-//        objects = new ArrayList<>();
         this.objects = newList;
-//		requestRender();
     }
 
     public synchronized List<Object3DData> getObjects() {
         return objects;
-    }
-
-    public Object3DData getSelectedObject() {
-        return selectedObject;
-    }
-
-    public void setSelectedObject(Object3DData selectedObject) {
-        this.selectedObject = selectedObject;
     }
 
 }

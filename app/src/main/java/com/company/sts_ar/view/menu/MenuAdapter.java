@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.company.sts_ar.R;
 import com.company.sts_ar.config.Extra;
 import com.company.sts_ar.util.view.SquareImage;

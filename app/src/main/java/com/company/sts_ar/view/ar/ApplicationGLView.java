@@ -5,7 +5,6 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 
-
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
@@ -15,12 +14,12 @@ import javax.microedition.khronos.egl.EGLDisplay;
 // Responsible for setting up and configuring the OpenGL surface view.
 // This class does not contain any Vuforia specific code. 
 // You can use your own OpenGL implementation.
-public class SampleApplicationGLView extends GLSurfaceView {
+public class ApplicationGLView extends GLSurfaceView {
     private static final String LOGTAG = "Vuforia_SampleGLView";
 
 
     // Constructor.
-    public SampleApplicationGLView(Context context) {
+    public ApplicationGLView(Context context) {
         super(context);
     }
 

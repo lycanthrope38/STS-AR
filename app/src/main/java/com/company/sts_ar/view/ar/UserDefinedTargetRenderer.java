@@ -19,9 +19,9 @@ import com.company.sts_ar.loader.Object3D;
 import com.company.sts_ar.loader.Object3DBuilder;
 import com.company.sts_ar.loader.Object3DData;
 import com.company.sts_ar.loader.SceneLoader;
-import com.company.sts_ar.session.SampleAppRenderer;
-import com.company.sts_ar.session.SampleAppRendererControl;
-import com.company.sts_ar.session.SampleApplicationSession;
+import com.company.sts_ar.session.AppRenderer;
+import com.company.sts_ar.session.AppRendererControl;
+import com.company.sts_ar.session.ApplicationSession;
 import com.company.sts_ar.util.SampleUtils;
 import com.vuforia.Device;
 import com.vuforia.Matrix44F;
@@ -45,16 +45,13 @@ import timber.log.Timber;
 
 
 // The renderer class for the ImageTargetsBuilder sample.
-public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, SampleAppRendererControl {
+public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, AppRendererControl {
     private static final String LOGTAG = "user-defined";
 
-    private SampleApplicationSession vuforiaAppSession;
-    private SampleAppRenderer mSampleAppRenderer;
+    private ApplicationSession vuforiaAppSession;
+    private AppRenderer mAppRenderer;
 
     private boolean mIsActive = false;
-
-    // Constants:
-    static final float kObjectScale = 3.f;
 
     // Reference to main activity
     private UserDefinedTargets mActivity;
@@ -65,17 +62,15 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
 
     private int mCurrentPage = 0;
 
-    Timber.Tree tree = Timber.tag("user-defined");
-
 
     public UserDefinedTargetRenderer(UserDefinedTargets activity,
-                                     SampleApplicationSession session) {
+                                     ApplicationSession session) {
         mActivity = activity;
         vuforiaAppSession = session;
 
-        // SampleAppRenderer used to encapsulate the use of RenderingPrimitives setting
+        // AppRenderer used to encapsulate the use of RenderingPrimitives setting
         // the device mode AR/VR and stereo mode
-        mSampleAppRenderer = new SampleAppRenderer(this, mActivity, Device.MODE.MODE_AR, false, 10f, 5000f);
+        mAppRenderer = new AppRenderer(this, mActivity, Device.MODE.MODE_AR, false, 10f, 5000f);
     }
 
 
@@ -88,7 +83,7 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
         // or after OpenGL ES context was lost (e.g. after onPause/onResume):
         vuforiaAppSession.onSurfaceCreated();
 
-        mSampleAppRenderer.onSurfaceCreated();
+        mAppRenderer.onSurfaceCreated();
     }
 
 
@@ -105,7 +100,7 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
         vuforiaAppSession.onSurfaceChanged(width, height);
 
         // RenderingPrimitives to be updated when some rendering change is done
-        mSampleAppRenderer.onConfigurationChanged(mIsActive);
+        mAppRenderer.onConfigurationChanged(mIsActive);
 
         // Call function to initialize rendering:
         initRendering();
@@ -116,7 +111,7 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
         mIsActive = active;
 
         if (mIsActive)
-            mSampleAppRenderer.configureVideoBackground();
+            mAppRenderer.configureVideoBackground();
     }
 
 
@@ -126,8 +121,8 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
         if (!mIsActive)
             return;
 
-        // Call our function to render content from SampleAppRenderer class
-        mSampleAppRenderer.render();
+        // Call our function to render content from AppRenderer class
+        mAppRenderer.render();
 
         scene = mActivity.getScene();
         if (scene == null) {
@@ -138,12 +133,12 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
 
 
     // The render function called from SampleAppRendering by using RenderingPrimitives views.
-    // The state is owned by SampleAppRenderer which is controlling it's lifecycle.
+    // The state is owned by AppRenderer which is controlling it's lifecycle.
     // State should not be cached outside this method.
     public void renderFrame(State state, float[] projectionMatrix) {
 
         // Renders video background replacing Renderer.DrawVideoBackground()
-        mSampleAppRenderer.renderVideoBackground();
+        mAppRenderer.renderVideoBackground();
 
         mActivity.currentPageObserver()
                 .observeOn(Schedulers.computation())
@@ -167,21 +162,12 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
                     .convertPose2GLMatrix(trackableResult.getPose());
             float[] modelViewMatrix = modelViewMatrix_Vuforia.getData();
 
-//            float[] modelViewProjection = new float[16];
-//            Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f, kObjectScale);
-//            Matrix.scaleM(modelViewMatrix, 0, kObjectScale, kObjectScale,
-//                    kObjectScale);
-//            Matrix.multiplyMM(modelViewProjection, 0, projectionMatrix, 0, modelViewMatrix, 0);
-
             List<Object3DData> objects = scene.getObjects();
             for (int i = 0; i < 1; i++) {
-                Log.d(LOGTAG, "thought objects");
-                tree.d("thought objects :" + mCurrentPage);
                 try {
                     Object3DData objData = objects.get(mCurrentPage);
 
                     Object3D drawerObject = drawer.getDrawer(objData, true);
-                    // Log.d("ModelRenderer","Drawing object using '"+drawerObject.getClass()+"'");
 
                     Integer textureId = textures.get(objData.getTextureData());
                     if (textureId == null && objData.getTextureData() != null) {
@@ -193,9 +179,6 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
                     drawerObject.draw(objData, projectionMatrix, modelViewMatrix,
                             textureId != null ? textureId : -1);
 
-
-                    // TODO: enable this only when user wants it
-                    // obj3D.drawVectorNormals(result, modelViewMatrix);
                 } catch (IOException ex) {
                     Toast.makeText(mActivity.getApplicationContext(),
                             "There was a problem creating 3D object", Toast.LENGTH_LONG).show();

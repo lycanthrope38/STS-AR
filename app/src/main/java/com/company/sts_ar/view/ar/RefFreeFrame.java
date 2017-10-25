@@ -2,7 +2,7 @@ package com.company.sts_ar.view.ar;
 
 import android.util.Log;
 
-import com.company.sts_ar.session.SampleApplicationSession;
+import com.company.sts_ar.session.ApplicationSession;
 import com.company.sts_ar.util.SampleUtils;
 import com.vuforia.ImageTargetBuilder;
 import com.vuforia.ObjectTracker;
@@ -13,16 +13,16 @@ import com.vuforia.Vec2F;
 import com.vuforia.VideoBackgroundConfig;
 
 
-public class RefFreeFrame
-{
+public class RefFreeFrame {
 
     private static final String LOGTAG = "RefFreeFrame";
 
     // Some helper functions
-    enum STATUS
-    {
+    enum STATUS {
         STATUS_IDLE, STATUS_SCANNING, STATUS_CREATING, STATUS_SUCCESS
-    };
+    }
+
+    ;
 
     STATUS curStatus;
 
@@ -46,26 +46,23 @@ public class RefFreeFrame
 
     UserDefinedTargets mActivity;
 
-    SampleApplicationSession vuforiaAppSession;
+    ApplicationSession vuforiaAppSession;
 
 
     // Function used to transition in the range [0, 1]
-    float transition(float v0, float inc, float a, float b)
-    {
+    float transition(float v0, float inc, float a, float b) {
         float vOut = v0 + inc;
         return (vOut < a ? a : (vOut > b ? b : vOut));
     }
 
 
-    float transition(float v0, float inc)
-    {
+    float transition(float v0, float inc) {
         return transition(v0, inc, 0.0f, 1.0f);
     }
 
 
     public RefFreeFrame(UserDefinedTargets activity,
-                        SampleApplicationSession session)
-    {
+                        ApplicationSession session) {
         mActivity = activity;
         vuforiaAppSession = session;
         colorFrame = new float[4];
@@ -82,32 +79,27 @@ public class RefFreeFrame
     }
 
 
-    void init()
-    {
+    void init() {
         trackableSource = null;
     }
 
 
-    void deInit()
-    {
+    void deInit() {
         TrackerManager trackerManager = TrackerManager.getInstance();
         ObjectTracker objectTracker = (ObjectTracker) (trackerManager
                 .getTracker(ObjectTracker.getClassType()));
-        if (objectTracker != null)
-        {
+        if (objectTracker != null) {
             ImageTargetBuilder targetBuilder = objectTracker
                     .getImageTargetBuilder();
             if (targetBuilder != null
-                    && (targetBuilder.getFrameQuality() != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE))
-            {
+                    && (targetBuilder.getFrameQuality() != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE)) {
                 targetBuilder.stopScan();
             }
         }
     }
 
 
-    void initGL(int screenWidth, int screenHeight)
-    {
+    void initGL(int screenWidth, int screenHeight) {
         frameGL.init(screenWidth, screenHeight);
 
         Renderer renderer = Renderer.getInstance();
@@ -126,21 +118,18 @@ public class RefFreeFrame
     }
 
 
-    void reset()
-    {
+    void reset() {
         curStatus = STATUS.STATUS_IDLE;
 
     }
 
 
-    void setCreating()
-    {
+    void setCreating() {
         curStatus = STATUS.STATUS_CREATING;
     }
 
 
-    void updateUIState(ImageTargetBuilder targetBuilder, int frameQuality)
-    {
+    void updateUIState(ImageTargetBuilder targetBuilder, int frameQuality) {
         // ** Elapsed time
         long elapsedTimeMS = System.currentTimeMillis() - lastFrameTime;
         lastFrameTime += elapsedTimeMS;
@@ -151,8 +140,7 @@ public class RefFreeFrame
 
         STATUS newStatus = curStatus;
 
-        switch (curStatus)
-        {
+        switch (curStatus) {
             case STATUS_IDLE:
                 if (frameQuality != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE)
                     newStatus = STATUS.STATUS_SCANNING;
@@ -160,8 +148,7 @@ public class RefFreeFrame
                 break;
 
             case STATUS_SCANNING:
-                switch (frameQuality)
-                {
+                switch (frameQuality) {
                     // bad target quality, render the frame white until a match is
                     // made, then go to green
                     case ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW:
@@ -185,14 +172,12 @@ public class RefFreeFrame
                 }
                 break;
 
-            case STATUS_CREATING:
-            {
+            case STATUS_CREATING: {
                 // check for new result
                 // if found, set to success, success time and:
                 TrackableSource newTrackableSource = targetBuilder
                         .getTrackableSource();
-                if (newTrackableSource != null)
-                {
+                if (newTrackableSource != null) {
                     newStatus = STATUS.STATUS_SUCCESS;
                     lastSuccessTime = lastFrameTime;
                     trackableSource = newTrackableSource;
@@ -208,8 +193,7 @@ public class RefFreeFrame
     }
 
 
-    void render()
-    {
+    void render() {
         // Get the cover tracker
         TrackerManager trackerManager = TrackerManager.getInstance();
         ObjectTracker objectTracker = (ObjectTracker) (trackerManager
@@ -222,8 +206,7 @@ public class RefFreeFrame
         // Update the UI internal state variables
         updateUIState(targetBuilder, frameQuality);
 
-        if (curStatus == STATUS.STATUS_SUCCESS)
-        {
+        if (curStatus == STATUS.STATUS_SUCCESS) {
             curStatus = STATUS.STATUS_IDLE;
 
             Log.d(LOGTAG, "Built target, reactivating dataset with new target");
@@ -231,8 +214,7 @@ public class RefFreeFrame
         }
 
         // Renders the hints
-        switch (curStatus)
-        {
+        switch (curStatus) {
             case STATUS_SCANNING:
 //                renderScanningViewfinder(frameQuality);
                 break;
@@ -245,22 +227,12 @@ public class RefFreeFrame
     }
 
 
-    void renderScanningViewfinder(int quality)
-    {
-        frameGL.setModelViewScale(2.0f);
-        frameGL.setColor(colorFrame);
-        frameGL.renderViewfinder();
-    }
-
-
-    boolean hasNewTrackableSource()
-    {
+    boolean hasNewTrackableSource() {
         return (trackableSource != null);
     }
 
 
-    TrackableSource getNewTrackableSource()
-    {
+    TrackableSource getNewTrackableSource() {
         TrackableSource result = trackableSource;
         trackableSource = null;
         return result;

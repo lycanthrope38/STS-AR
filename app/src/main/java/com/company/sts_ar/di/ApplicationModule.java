@@ -1,12 +1,11 @@
 package com.company.sts_ar.di;
 
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
 import android.app.Application;
 import android.content.Context;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import javax.inject.Singleton;
 

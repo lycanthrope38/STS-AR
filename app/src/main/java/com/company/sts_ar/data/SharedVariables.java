@@ -3,7 +3,6 @@ package com.company.sts_ar.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.company.sts_ar.di.ApplicationScope;
 
@@ -32,7 +31,7 @@ public class SharedVariables {
         return mSharedPreferences.getString(KEY_BASE_URL, "");
     }
 
-    public void putBaseUrl(String url){
+    public void putBaseUrl(String url) {
         mSharedPreferences.edit().putString(KEY_BASE_URL, url).apply();
     }
 

@@ -59,7 +59,7 @@ public class DetailActivity extends AppCompatActivity {
             mFolder.mkdirs();
         }
 
-        mPdDownload   = new ProgressDialog(this);
+        mPdDownload = new ProgressDialog(this);
         mPdDownload.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mPdDownload.setMessage("Downloading. Please wait...");
         mPdDownload.setIndeterminate(true);

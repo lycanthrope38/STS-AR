@@ -2,10 +2,9 @@ package com.company.sts_ar.view.ar;
 
 import android.content.res.Configuration;
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 import android.util.Log;
 
-import com.company.sts_ar.session.SampleApplicationSession;
+import com.company.sts_ar.session.ApplicationSession;
 import com.company.sts_ar.util.SampleUtils;
 import com.vuforia.Matrix44F;
 import com.vuforia.Renderer;
@@ -17,25 +16,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 
-public class RefFreeFrameGL
-{
+public class RefFreeFrameGL {
 
     private static final String LOGTAG = "RefFreeFrameGL";
 
     UserDefinedTargets mActivity;
-    SampleApplicationSession vuforiaAppSession;
-
-    private final class TEXTURE_NAME
-    {
-        // Viewfinder in portrait mode
-        public final static int TEXTURE_VIEWFINDER_MARKS_PORTRAIT = 0;
-
-        // Viewfinder in landscape mode
-        public final static int TEXTURE_VIEWFINDER_MARKS = 1;
-
-        // Not a texture, count of predef textures
-        public final static int TEXTURE_COUNT = 2;
-    }
+    ApplicationSession vuforiaAppSession;
 
     // OpenGL handles for the various shader related variables
     private int shaderProgramID; // The Shaders themselves
@@ -79,8 +65,7 @@ public class RefFreeFrameGL
 
 
     public RefFreeFrameGL(UserDefinedTargets activity,
-                          SampleApplicationSession session)
-    {
+                          ApplicationSession session) {
         mActivity = activity;
         vuforiaAppSession = session;
         shaderProgramID = 0;
@@ -94,16 +79,7 @@ public class RefFreeFrameGL
     }
 
 
-    // Quickly set the color for rendering
-    void setColor(float r, float g, float b, float a)
-    {
-        float[] tempColor = { r, g, b, a };
-        color.setData(tempColor);
-    }
-
-
-    void setColor(float c[])
-    {
+    void setColor(float c[]) {
         if (c.length != 4)
             throw new IllegalArgumentException(
                     "Color length must be 4 floats length");
@@ -112,17 +88,8 @@ public class RefFreeFrameGL
     }
 
 
-    // Set the scale for the model view matrix
-    void setModelViewScale(float scale)
-    {
-        float[] tempModelViewData = modelview.getData();
-        tempModelViewData[14] = scale;
-        modelview.setData(tempModelViewData);
-    }
 
-
-    boolean init(int screenWidth, int screenHeight)
-    {
+    boolean init(int screenWidth, int screenHeight) {
         float tempMatrix44Array[] = new float[16];
         // modelview matrix set to identity
         modelview = new Matrix44F();
@@ -131,7 +98,7 @@ public class RefFreeFrameGL
         modelview.setData(tempMatrix44Array);
 
         // color is set to pure white
-        float tempColor[] = { 1.0f, 1.0f, 1.0f, 0.6f };
+        float tempColor[] = {1.0f, 1.0f, 1.0f, 0.6f};
         color.setData(tempColor);
 
         // Detect if we are in portrait mode or not
@@ -165,8 +132,7 @@ public class RefFreeFrameGL
 
         // makes ortho matrix
         projectionOrtho = new Matrix44F();
-        for (int i = 0; i < tempMatrix44Array.length; i++)
-        {
+        for (int i = 0; i < tempMatrix44Array.length; i++) {
             tempMatrix44Array[i] = 0;
         }
 
@@ -237,90 +203,6 @@ public class RefFreeFrameGL
         //load textures
 
         return true;
-    }
-
-
-    private Buffer fillBuffer(float[] array)
-    {
-        // Convert to floats because OpenGL doesnt work on doubles, and manually
-        // casting each input value would take too much time.
-        ByteBuffer bb = ByteBuffer.allocateDirect(4 * array.length); // each
-        // float
-        // takes 4
-        // bytes
-        bb.order(ByteOrder.LITTLE_ENDIAN);
-        for (double d : array)
-            bb.putFloat((float) d);
-        bb.rewind();
-
-        return bb;
-    }
-
-
-    private Buffer fillBuffer(short[] array)
-    {
-        ByteBuffer bb = ByteBuffer.allocateDirect(2 * array.length); // each
-        // short
-        // takes 2
-        // bytes
-        bb.order(ByteOrder.LITTLE_ENDIAN);
-        for (short s : array)
-            bb.putShort(s);
-        bb.rewind();
-
-        return bb;
-
-    }
-
-
-
-    // / Renders the viewfinder
-    void renderViewfinder()
-    {
-
-        // Set GL flags
-        GLES20.glEnable(GLES20.GL_BLEND);
-        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-        GLES20.glDisable(GLES20.GL_CULL_FACE);
-
-        // Set the shader program
-        GLES20.glUseProgram(shaderProgramID);
-
-        // Calculate the Projection * ModelView matrix and pass to shader
-        float[] mvp = new float[16];
-        Matrix.multiplyMM(mvp, 0, projectionOrtho.getData(), 0,
-                modelview.getData(), 0);
-        GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvp, 0);
-
-        // Set the vertex handle
-        Buffer verticesBuffer = fillBuffer(frameVertices_viewfinder);
-        GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT, false,
-                0, verticesBuffer);
-
-        // Set the Texture coordinate handle
-        Buffer texCoordBuffer = fillBuffer(frameTexCoords);
-        GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT,
-                false, 0, texCoordBuffer);
-
-        // Enable the Vertex and Texture arrays
-        GLES20.glEnableVertexAttribArray(vertexHandle);
-        GLES20.glEnableVertexAttribArray(textureCoordHandle);
-
-        // Send the color value to the shader
-        GLES20.glUniform4fv(colorHandle, 1, color.getData(), 0);
-
-        // Depending on if we are in portrait or landsacape mode,
-        // choose the proper viewfinder texture
-
-        // Draw the viewfinder
-        Buffer indicesBuffer = fillBuffer(frameIndices);
-        GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, NUM_FRAME_INDEX,
-                GLES20.GL_UNSIGNED_SHORT, indicesBuffer);
-
-        GLES20.glDisable(GLES20.GL_BLEND);
-        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-
     }
 
 }

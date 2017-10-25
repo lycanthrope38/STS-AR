@@ -343,35 +343,6 @@ public abstract class Object3DImpl implements Object3D {
 }
 
 /**
- * Draw a single point in space
- */
-class Object3DV0 extends Object3DImpl {
-    // @formatter:off
-    private static final String pointVertexShader =
-            "uniform mat4 u_MVPMatrix;      \n"
-                    + "attribute vec4 a_Position;     \n"
-                    + "void main()                    \n"
-                    + "{                              \n"
-                    + "   gl_Position = u_MVPMatrix  * a_Position;   \n"
-                    + "   gl_PointSize = 20.0;         \n"
-                    + "}                              \n";
-    // @formatter:on
-
-    // @formatter:off
-    private static final String pointFragmentShader =
-            "precision mediump float;       \n"
-                    + "void main()                    \n"
-                    + "{                              \n"
-                    + "   gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);             \n"
-                    + "}                              \n";
-    // @formatter:on
-
-    public Object3DV0() {
-        super("V0", pointVertexShader, pointFragmentShader, "a_Position");
-    }
-}
-
-/**
  * Draw using single color
  */
 class Object3DV1 extends Object3DImpl {
@@ -406,83 +377,9 @@ class Object3DV1 extends Object3DImpl {
 }
 
 /**
- * Drawer using multiple colors
- */
-class Object3DV2 extends Object3DImpl {
-    // @formatter:off
-    private final static String vertexShaderCode =
-            "uniform mat4 u_MVPMatrix;" +
-                    "attribute vec4 a_Position;" +
-                    "attribute vec4 a_Color;" +
-                    "varying vec4 vColor;" +
-                    "void main() {" +
-                    "  vColor = a_Color;" +
-                    "  gl_Position = u_MVPMatrix * a_Position;" +
-                    "  gl_PointSize = 2.5;  \n" +
-                    "}";
-    // @formatter:on
-
-    // @formatter:off
-    private final static String fragmentShaderCode =
-            "precision mediump float;" +
-                    "varying vec4 vColor;" +
-                    "void main() {" +
-                    "  gl_FragColor = vColor;" +
-                    "}";
-    // @formatter:on
-
-    public Object3DV2() {
-        super("V2", vertexShaderCode, fragmentShaderCode, "a_Position", "a_Color");
-    }
-
-    @Override
-    protected boolean supportsColors() {
-        return true;
-    }
-}
-
-/**
- * Drawer using single color & textures
- */
-class Object3DV3 extends Object3DImpl {
-    // @formatter:off
-    private final static String vertexShaderCode =
-            "uniform mat4 u_MVPMatrix;" +
-                    "attribute vec4 a_Position;" +
-                    "attribute vec2 a_TexCoordinate;" + // Per-vertex texture coordinate information we will pass in.
-                    "varying vec2 v_TexCoordinate;" +   // This will be passed into the fragment shader.
-                    "void main() {" +
-                    "  v_TexCoordinate = a_TexCoordinate;" +
-                    "  gl_Position = u_MVPMatrix * a_Position;" +
-                    "  gl_PointSize = 2.5;  \n" +
-                    "}";
-    // @formatter:on
-
-    // @formatter:off
-    private final static String fragmentShaderCode =
-            "precision mediump float;" +
-                    "uniform vec4 vColor;" +
-                    "uniform sampler2D u_Texture;" +
-                    "varying vec2 v_TexCoordinate;" +
-                    "void main() {" +
-                    "  gl_FragColor = vColor * texture2D(u_Texture, v_TexCoordinate);" +
-                    "}";
-    // @formatter:on
-
-    public Object3DV3() {
-        super("V3", vertexShaderCode, fragmentShaderCode, "a_Position", "a_TexCoordinate");
-    }
-
-    @Override
-    protected boolean supportsTextures() {
-        return true;
-    }
-}
-
-/**
  * Drawer using textures & multiple colors
  */
-class Object3DV4 extends Object3DImpl {
+class Object3DV2 extends Object3DImpl {
     // @formatter:off
     protected final static String vertexShaderCode =
             "uniform mat4 u_MVPMatrix;" +
@@ -510,7 +407,7 @@ class Object3DV4 extends Object3DImpl {
                     "}";
     // @formatter:on
 
-    public Object3DV4() {
+    public Object3DV2() {
         super("V4", vertexShaderCode, fragmentShaderCode, "a_Position", "a_Color", "a_TexCoordinate");
     }
 

@@ -6,12 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -22,12 +19,11 @@ import com.company.sts_ar.R;
 import com.company.sts_ar.config.Config;
 import com.company.sts_ar.config.Extra;
 import com.company.sts_ar.loader.SceneLoader;
-import com.company.sts_ar.session.SampleApplicationControl;
-import com.company.sts_ar.session.SampleApplicationException;
-import com.company.sts_ar.session.SampleApplicationSession;
+import com.company.sts_ar.session.ApplicationControl;
+import com.company.sts_ar.session.ApplicationException;
+import com.company.sts_ar.session.ApplicationSession;
 import com.company.sts_ar.util.view.LoadingDialogHandler;
 import com.company.sts_ar.view.BaseActivity;
-import com.company.sts_ar.view.menu.DetailActivity;
 import com.company.sts_ar.vo.Project;
 import com.vuforia.CameraDevice;
 import com.vuforia.DataSet;
@@ -45,18 +41,17 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import timber.log.Timber;
 
 //https://www.youtube.com/watch?v=6gRUUeFteQg
 // The main activity for the UserDefinedTargets sample.
 public class UserDefinedTargets extends BaseActivity implements
-        SampleApplicationControl {
+        ApplicationControl {
     private static final String LOGTAG = "UserDefinedTargets";
 
-    private SampleApplicationSession vuforiaAppSession;
+    private ApplicationSession vuforiaAppSession;
 
     // Our OpenGL view:
-    private SampleApplicationGLView mGlView;
+    private ApplicationGLView mGlView;
 
     // Our renderer:
     private UserDefinedTargetRenderer mRenderer;
@@ -72,8 +67,6 @@ public class UserDefinedTargets extends BaseActivity implements
     int targetBuilderCounter = 1;
 
     DataSet dataSetUserDef = null;
-
-    private GestureDetector mGestureDetector;
 
     private ArrayList<View> mSettingsAdditionalViews;
 
@@ -94,7 +87,6 @@ public class UserDefinedTargets extends BaseActivity implements
     private PublishSubject<Integer> mCurrentPageObserver = PublishSubject.create();
     private int mCurrentPage = 0;
 
-    Timber.Tree tree = Timber.tag("user-defined");
     private Project project;
 
 
@@ -105,12 +97,10 @@ public class UserDefinedTargets extends BaseActivity implements
         Log.d(LOGTAG, "onCreate");
         super.onCreate(savedInstanceState);
 
-        vuforiaAppSession = new SampleApplicationSession(this);
+        vuforiaAppSession = new ApplicationSession(this);
 
         vuforiaAppSession
                 .initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        mGestureDetector = new GestureDetector(this, new GestureListener());
 
         project = ((Project) getIntent().getSerializableExtra(Extra.EXTRA_PROJECT));
 
@@ -137,42 +127,6 @@ public class UserDefinedTargets extends BaseActivity implements
 
     public PublishSubject<Integer> currentPageObserver() {
         return mCurrentPageObserver;
-    }
-
-    // Process Single Tap event to trigger autofocus
-    private class GestureListener extends
-            GestureDetector.SimpleOnGestureListener {
-        // Used to set autofocus one second after a manual focus is triggered
-        private final Handler autofocusHandler = new Handler();
-
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            boolean result = CameraDevice.getInstance().setFocusMode(
-                    CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
-            if (!result)
-                Log.e("SingleTapUp", "Unable to trigger focus");
-
-            // Generates a Handler to trigger continuous auto-focus
-            // after 1 second
-            autofocusHandler.postDelayed(new Runnable() {
-                public void run() {
-                    final boolean autofocusResult = CameraDevice.getInstance().setFocusMode(
-                            CameraDevice.FOCUS_MODE.FOCUS_MODE_CONTINUOUSAUTO);
-
-                    if (!autofocusResult)
-                        Log.e("SingleTapUp", "Unable to re-enable continuous auto-focus");
-                }
-            }, 1000L);
-
-            return true;
-        }
     }
 
     // Called when the activity will start interacting with the user.
@@ -206,7 +160,7 @@ public class UserDefinedTargets extends BaseActivity implements
 
         try {
             vuforiaAppSession.pauseAR();
-        } catch (SampleApplicationException e) {
+        } catch (ApplicationException e) {
             Log.e(LOGTAG, e.getString());
         }
     }
@@ -220,7 +174,7 @@ public class UserDefinedTargets extends BaseActivity implements
 
         try {
             vuforiaAppSession.stopAR();
-        } catch (SampleApplicationException e) {
+        } catch (ApplicationException e) {
             Log.e(LOGTAG, e.getString());
         }
 
@@ -294,7 +248,7 @@ public class UserDefinedTargets extends BaseActivity implements
         int stencilSize = 0;
         boolean translucent = Vuforia.requiresAlpha();
 
-        mGlView = new SampleApplicationGLView(this);
+        mGlView = new ApplicationGLView(this);
         mGlView.init(translucent, depthSize, stencilSize);
 
         mRenderer = new UserDefinedTargetRenderer(this, vuforiaAppSession);
@@ -607,7 +561,7 @@ public class UserDefinedTargets extends BaseActivity implements
     }
 
     @Override
-    public void onInitARDone(SampleApplicationException exception) {
+    public void onInitARDone(ApplicationException exception) {
 
         if (exception == null) {
             initApplicationAR();
@@ -739,15 +693,6 @@ public class UserDefinedTargets extends BaseActivity implements
             }
 
         }
-    }
-
-    final public static int CMD_BACK = -1;
-    final public static int CMD_EXTENDED_TRACKING = 1;
-
-    // This method sets the additional views to be moved along with the GLView
-    private void setSampleAppMenuAdditionalViews() {
-        mSettingsAdditionalViews = new ArrayList<View>();
-        mSettingsAdditionalViews.add(mBottomBar);
     }
 
 

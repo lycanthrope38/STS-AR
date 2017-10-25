@@ -1,5 +1,6 @@
 package com.company.sts_ar.view;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,9 +15,8 @@ import com.company.sts_ar.config.Extra;
 import com.company.sts_ar.data.SharedVariables;
 import com.company.sts_ar.util.FileUtils;
 import com.company.sts_ar.view.menu.BarcodeActivity;
-import com.company.sts_ar.view.menu.DetailActivity;
 import com.company.sts_ar.view.menu.MenuActivity;
-import com.company.sts_ar.vo.Project;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 
@@ -46,7 +46,17 @@ public class MainActivity extends AppCompatActivity {
 
         ARApplication.getInstance().getAppComponent().inject(this);
 
-        mPdDownload  = new ProgressDialog(this);
+        new RxPermissions(this).request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                    if (granted) {
+                        Toast.makeText(this, "All permissions are granted", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Permission check failed", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+
+        mPdDownload = new ProgressDialog(this);
         mPdDownload.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mPdDownload.setMessage("Downloading. Please wait...");
         mPdDownload.setIndeterminate(true);
@@ -68,13 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void downloadProjectStructure(String url) {
         mPdDownload.show();
-        mSharedVariables.putBaseUrl(url.substring(0,url.lastIndexOf("/")));
-        if (!url.contains(Config.PROJECT_JSON)){
+        mSharedVariables.putBaseUrl(url.substring(0, url.lastIndexOf("/")));
+        if (!url.contains(Config.PROJECT_JSON)) {
             Toast.makeText(this, "URL is not valid", Toast.LENGTH_SHORT).show();
             return;
         }
         Flowable.fromCallable(() -> {
-            String outputPath = Config.DIRECTORY_PATH + File.separator + url.substring(url.lastIndexOf("/") + 1 );
+            String outputPath = Config.DIRECTORY_PATH + File.separator + url.substring(url.lastIndexOf("/") + 1);
             FileUtils.download(url, new File(outputPath));
             return outputPath;
         }).subscribeOn(Schedulers.newThread())
